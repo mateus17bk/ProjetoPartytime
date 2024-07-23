@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 //routes
+const authRoutes = require('./routes/authRoutes.js')
 //middlewars
 
 //config
@@ -14,6 +15,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
+//atrela as rotas no express
+app.use('/api/auth',authRoutes)
+
+
+
+
+//Conexão mongodb
+mongoose.connect('mongodb://localhost:27017/dbName');
+const db = mongoose.connection;
+db.on('error', console.error.bind(console,"Erro de conexão com o MongoDb"));
+db.once('open', () =>{
+    console.log('Conexão bem-vindo com o MongoDb');
+});
 
 //atrelar as rotas express
 app.get('/',(req, res)=>{
