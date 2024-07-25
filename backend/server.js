@@ -22,7 +22,7 @@ app.use(express.static("public"));
 
 //atrela as rotas no express
 app.use('/api/auth',authRouter);
-app.use('/api/auth',userRouter);
+app.use('/api/user',userRouter);
 
 //Conexão mongodb
 mongoose.connect(`mongodb://localhost:27017/${dbName}`);
