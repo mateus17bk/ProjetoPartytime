@@ -8,8 +8,8 @@ const PartySchema = new mongoose.Schema({
     description:{
         type: String
     },
-    partyData:{
-        type: Data
+    partyDate:{
+        type: Date
     },
     photos:{
         type: Array
@@ -24,4 +24,4 @@ const PartySchema = new mongoose.Schema({
 });
 
 const Party = mongoose.model("Party", PartySchema);
-module.exports(Party);
+module.exports = Party;

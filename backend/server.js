@@ -7,6 +7,9 @@ const cors = require('cors');
 //routes
 const authRouter = require('./routes/authRoutes.js');
 const userRouter = require('./routes/userRoutes.js');
+const partyRouter = require('./routes/partyRoutes.js');
+
+
 
 
 //middlewars
@@ -23,6 +26,7 @@ app.use(express.static("public"));
 //atrela as rotas no express
 app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter);
+app.use('/api/party',partyRouter);
 
 //Conexão mongodb
 mongoose.connect(`mongodb://localhost:27017/${dbName}`);

@@ -29,7 +29,7 @@ router.get("/:id", verifyToken,async (req, res) => {
 });
 
 //update do usuario
-router.put("/",verifyToken, async(req, res)=>{
+router.put("/", verifyToken, async(req, res)=>{
     const token = req.header("auth-token");
     const user = await getUserByToken(token); 
     const userReqId = req.body.id;
@@ -37,13 +37,36 @@ router.put("/",verifyToken, async(req, res)=>{
     const confirmpassword = req.body.confirmpassword;
 
     const userId = user._id.toString();
+
     if(userId != userReqId){
         res.status(401).json({error:"Acesso negado!"});
     }
-    const updateData ={
+    const updateData = {
         name: req.body.name,
-        email: req.boby.email
+        email: req.body.email
     };
+
+
+    //verificar o senha
+    if( password !== confirmpassword){
+        res.status(401).json({error:"As senhas não conferem!"});
+    } else if(password == confirmpassword && password != null){
+        
+        //criando a senha
+        const salt = await bcrypt.genSalt(12);
+        const passwordHash = await bcrypt.hash(reqpassword, salt);
+
+        updateData.password = passwordHash;
+    }
+
+    try{
+        const updateUser = await User.findOneAndUpdate({_id: userId}, {$set: updateData}, {new: true});
+        res.json({error: null, msg:"Usuário atualizado com sucesso!", data: updateUser})
+    } catch(error){
+        res.status(400).json({ err });
+    }
+
+
 });
 
 module.exports = router;
