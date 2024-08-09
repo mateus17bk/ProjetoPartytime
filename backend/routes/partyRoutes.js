@@ -131,8 +131,80 @@ router.get("/:id", async(req, res) =>{
         return res.status(400).json({error:"Este evento não existe!"})
     }
 
-
 });
 
+
+router.delete("/", verifyToken, async(req, res)=>{
+    const token = req.header("auth-token");
+    const user = await getUserByToken(token);
+    const partyId = req.body.id;
+    const userId = user._id.toString();
+
+    try{
+        await Party.deleteOne({_id: partyId, userId: userId});
+        res.json({error: null, msg:"Evento removido com sucesso!"});
+    }catch (err){
+        res.status(400).json({error:"Acesso negado!"});
+    }
+});
+
+router.put("/", verifyToken, upload.fields([{name:"photos"}]), async(req,res)=>{
+    const title = req.body.title;
+    const description = req.body.description;
+    const partyDate = req.body.party;
+    const partyId = req.body.id;
+    const partyUserId = req.body.user_id;
+
+
+    let files = [];
+    if(req.files){
+        files = req.files.photos;
+    }
+
+    if(title == "null" || description == "null" || partyDate == "null"){
+        return res.status(400).json({error: "Preencha pelo menos nome, descrição e data."});
+    }
+
+    const token = req.header("auth-token");
+    const userByToken = await getUserByToken(token);
+    const userId = userByToken._id.toString();
+
+    if(userId != partyUserId){
+        return res.status(400).json({error:"Acesso negado!"});
+    }
+
+    const party ={
+       id: partyId,
+       title: title,
+       description: description,
+       partyDate: partyDate,
+       privacy: req.body.privacy,
+       userId: userId
+
+    }
+
+    let photos = [];
+    
+    if(files && files.length > 0){
+        files.forEach((photos, i)=>{
+            photos[i] = photos.path;
+        });
+
+        party.photos = photos;
+        
+
+    }
+
+    try{
+        const updateParty = await Party.findOneAndUpdate({_id: partyId, userId: userId}, {$set: party}, {new: true});
+        res.json({error: null, msg:"Evento atualizado com sucesso!", data: updateParty});
+        
+    }catch(error){
+        res.status(400).json({error});
+    }
+
+
+    
+});
 
 module.exports = router;
