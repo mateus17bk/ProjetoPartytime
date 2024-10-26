@@ -148,10 +148,10 @@ router.delete("/", verifyToken, async(req, res)=>{
     }
 });
 
-router.put("/", verifyToken, upload.fields([{name:"photos"}]), async(req,res)=>{
+router.patch("/", verifyToken, upload.fields([{name:"photos"}]), async(req,res)=>{
     const title = req.body.title;
     const description = req.body.description;
-    const partyDate = req.body.party;
+    const partyDate = req.body.party_date;
     const partyId = req.body.id;
     const partyUserId = req.body.user_id;
 

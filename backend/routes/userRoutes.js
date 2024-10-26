@@ -29,7 +29,7 @@ router.get("/:id", verifyToken,async (req, res) => {
 });
 
 //update do usuario
-router.put("/", verifyToken, async(req, res)=>{
+router.patch("/", verifyToken, async(req, res)=>{
     const token = req.header("auth-token");
     const user = await getUserByToken(token); 
     const userReqId = req.body.id;

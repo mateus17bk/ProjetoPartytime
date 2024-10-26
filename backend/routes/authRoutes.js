@@ -62,7 +62,7 @@ routes.post("/register", async(req, res) =>{
 });
 
 // Login do usuario
-routes.post("/login", async(req, res)=> {
+routes.post("/login", async (req, res)=> {
     const email = req.body.email;
     const password = req.body.password
 
@@ -73,7 +73,7 @@ routes.post("/login", async(req, res)=> {
         return res.status(400).json({ error: "Não há usuario cadastro com esse email!" });
     }
     
-    const checkPassword =await bcrypt.compare(password, user.password)
+    const checkPassword = await bcrypt.compare(password, user.password)
     if(!checkPassword){
         return res.status(400).json({ error: "Senha invalida!" });
     }
@@ -91,5 +91,6 @@ routes.post("/login", async(req, res)=> {
     res.json({error: null, mgs:"Você está authenticado!", token: token, userId: user._id});
 
 });
+
 
 module.exports = routes;
